@@ -1,4 +1,4 @@
-<block> --> ['{'], block_statements, ['}']
+<block> --> ['{'], block_statements, ['}'].
 
 block_statements --> block_statement.
 block_statements --> block_statements, block_statement.
