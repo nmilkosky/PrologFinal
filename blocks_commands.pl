@@ -93,7 +93,6 @@ return_statement --> [return], expression, [';'].
 throws_statement --> [throw], expression, [';'].
 
 try_statement --> [try], block, catches.
-try_statement --> [try], block, catches.
 try_statement --> [try], block, finally.
 catches --> catch_clause.
 catches --> catches, catch_clause.
