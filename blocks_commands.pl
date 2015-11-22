@@ -63,13 +63,13 @@ switch_label --> [default], [':'].
 
 while_statement --> [while], ['('], expression, [')'], statement.
 
-do_statement --> [do], statement, [while] expression, [;].
+do_statement --> [do], statement, [while] expression, [';'].
 
 %Are expression and for_counter optional?
-for_statement --> [for], ['('], for_init, [;], expression, [;], for_counter, [')'], statement. 
-for_statement --> [for], ['('], for_init, [;], expression, [')'], statement. 
-for_statement --> [for], ['('], for_init, [;], for_counter, [')'], statement. 
-for_statement --> [for], ['('], expression, [;], for_counter, [')'], statement. 
+for_statement --> [for], ['('], for_init, [';'], expression, [';'], for_counter, [')'], statement. 
+for_statement --> [for], ['('], for_init, [';'], expression, [')'], statement. 
+for_statement --> [for], ['('], for_init, [';'], for_counter, [')'], statement. 
+for_statement --> [for], ['('], expression, [';'], for_counter, [')'], statement. 
 for_statement --> [for], ['('], for_init, [')'], statement. 
 for_statement --> [for], ['('], expression, [')'], statement. 
 for_statement --> [for], ['('], for_counter, [')'], statement. 
