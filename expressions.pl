@@ -107,5 +107,31 @@ primary					--> primaryNoNewArray.
 primary					--> arrayCreateExpr.
 
 primaryNoNewArray		--> literal.
-primaryNoNewArray		--> this.
-primaryNoNewArray		--> 
+primaryNoNewArray		--> ['this'].
+primaryNoNewArray		--> ['('], expression, [')'].
+primaryNoNewArray		--> classInstCreateExpr.
+primaryNoNewArray		--> fieldAccess.
+primaryNoNewArray		--> methodInvocation.
+primaryNoNewArray		--> arrayAccess.
+
+classInstCreateExpr		--> ['new'], classType, ['('], arguementList, [')'].
+
+arguementList			--> [].
+arguementList			--> expression.
+arguementList			--> arguementList, [','], expression.
+
+arrayCreateExpr			--> ['new'], primitiveType, dimExprs, dims.
+arrayCreateExpr			--> ['new'], classInterType, dimExprs, dims.
+
+dimExprs				--> dimExpr.
+dimExprs				--> dimExprs, dimExpr.
+
+dimExpr					--> ['['], expression, [']'].
+
+dims					--> [].
+dims 					--> ['[]'].
+dims					--> dims, ['[]'].
+
+arrayAccess				--> expressionName, ['['], expression, [']'].
+arrayAccess				--> primaryNoNewArray, ['['], expression, [']'].
+
