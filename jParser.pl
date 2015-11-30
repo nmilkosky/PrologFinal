@@ -35,8 +35,7 @@ constructor_modifier(private).
 
 constructorDeclarator --> identifier, ['('], formalParameter, [')'].
 
-%Needs completion
-formalParameter --> type.
+formalParameter --> type, identifier.
 
 throws --> [].
 throws --> [throws], identifier.
@@ -82,22 +81,17 @@ integral_type(char).
 floating_type(float).
 floating_type(double).
 
-%referenceType --> classType.
-%referenceType --> interfaceType.
+referenceType --> classinterfaceType.
 referenceType --> arrayType.
 
-classType --> typeName.
+classinterfaceType --> packagetypeName.
 
-interfaceType --> typeName.
-
-arrayType --> type, ['[]'].
+arrayType --> ['[]'].
 
 %---------Tokens------------
-packageName --> identifier.
-packageName --> packageName, identifier.
+packagetypeName --> typeName, identifier.
 
-typeName --> identifier.
-typeName --> packageName, identifier.
+typeName --> [I], {string(I)}.
 
 simple_type --> identifier.
 
