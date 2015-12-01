@@ -194,20 +194,20 @@ catchClause --> [catch], ['('], formalParameter, [')'], block.
 finally --> [finally], block.
 
 %----------------------------Expressions--------------------
-constantExpression 	--> expression.
+constantExpression --> expression.
 
-expression		--> assignmentExpression.
+expression --> assignmentExpression.
 
-assignmentExpression	--> conditionalExpression.
-assignmentExpression	--> assignment.
+assignmentExpression --> conditionalExpression.
+assignmentExpression --> assignment.
 
-assignment		--> leftSide, assignmentOper, assignmentExpression.
+assignment --> leftSide, assignmentOper, assignmentExpression.
 
-leftSide		--> expressionName.
-leftSide		--> fieldAccess.
-leftSide		--> arrayAccess.
+leftSide --> expression_name.
+leftSide --> fieldAccess.
+leftSide --> arrayAccess.
 
-assignmentOper		--> [AOper], {assignment_operator(AOper)}.
+assignmentOper  --> [AOper], {assignment_operator(AOper)}.
 assignment_operator('=').
 assignment_operator('*=').
 assignment_operator('/=').
@@ -221,115 +221,115 @@ assignment_operator('&=').
 assignment_operator('^=').
 assignment_operator('|=').
 
-conditionalExpression	--> conditionalOrExpression.
-conditionalExpression	--> conditionalOrExpression, ['?'], expression, [':'], conditionalExpression.
+conditionalExpression --> conditionalOrExpression.
+conditionalExpression --> conditionalOrExpression, ['?'], expression, [':'], conditionalExpression.
 
-conditionalOrExpression	--> conditionalAndExpress.
-conditionalOrExpression	--> conditionalOrExpression, ['||'], conditionalAndExpress.
+conditionalOrExpression --> conditionalAndExpress.
+conditionalOrExpression --> conditionalOrExpression, ['||'], conditionalAndExpress.
 
-conditionalAndExpress	--> inclusiveOrExpression.
-conditionalAndExpress	--> conditionalAndExpress, ['&&'], inclusiveOrExpression.
+conditionalAndExpress --> inclusiveOrExpression.
+conditionalAndExpress --> conditionalAndExpress, ['&&'], inclusiveOrExpression.
 
-inclusiveOrExpression	--> exclusiveOrExpression.
-inclusiveOrExpression	--> inclusiveOrExpression, ['|'], exclusiveOrExpression.
+inclusiveOrExpression --> exclusiveOrExpression.
+inclusiveOrExpression --> inclusiveOrExpression, ['|'], exclusiveOrExpression.
 
-exclusiveOrExpression	--> andExpression.
-exclusiveOrExpression	--> exclusiveOrExpression, ['^'], andExpression.
+exclusiveOrExpression --> andExpression.
+exclusiveOrExpression --> exclusiveOrExpression, ['^'], andExpression.
 
-andExpression			-->	equalityExpression.
-andExpression			--> andExpression, ['&'],  equalityExpression.
+andExpression --> equalityExpression.
+andExpression --> andExpression, ['&'],  equalityExpression.
 
-equalityExpression		--> relationalExpression.
-equalityExpression		--> equalityExpression, ['=='], relationalExpression.
-equalityExpression		--> equalityExpression, ['!='], relationalExpression.
+equalityExpression --> relationalExpression.
+equalityExpression --> equalityExpression, ['=='], relationalExpression.
+equalityExpression --> equalityExpression, ['!='], relationalExpression.
 
-relationalExpression	--> shiftExpression.
-relationalExpression	--> relationalExpression, ['<'], shiftExpression.
-relationalExpression	--> relationalExpression, ['>'], shiftExpression.
-relationalExpression	--> relationalExpression, ['<='], shiftExpression.
-relationalExpression	--> relationalExpression, ['>='], shiftExpression.
-relationalExpression	--> relationalExpression, ['instanceof'], referenceType.
+relationalExpression --> shiftExpression.
+relationalExpression --> relationalExpression, ['<'], shiftExpression.
+relationalExpression --> relationalExpression, ['>'], shiftExpression.
+relationalExpression --> relationalExpression, ['<='], shiftExpression.
+relationalExpression --> relationalExpression, ['>='], shiftExpression.
+relationalExpression --> relationalExpression, ['instanceof'], referenceType.
 
-shiftExpression			--> additiveExpression.
-shiftExpression			--> shiftExpression, ['<<'], additiveExpression.
-shiftExpression			--> shiftExpression, ['>>'], additiveExpression.
-shiftExpression			--> shiftExpression, ['>>>'], additiveExpression.
+shiftExpression --> additiveExpression.
+shiftExpression --> shiftExpression, ['<<'], additiveExpression.
+shiftExpression --> shiftExpression, ['>>'], additiveExpression.
+shiftExpression --> shiftExpression, ['>>>'], additiveExpression.
 
-additiveExpression		--> multiplicExpression.
-additiveExpression		--> additiveExpression, ['+'], multiplicExpression.
-additiveExpression		--> additiveExpression, ['-'], multiplicExpression.
+additiveExpression --> multiplicExpression.
+additiveExpression --> additiveExpression, ['+'], multiplicExpression.
+additiveExpression --> additiveExpression, ['-'], multiplicExpression.
 
-multiplicExpression		--> unaryExpression.
-multiplicExpression		--> multiplicExpression, ['*'], unaryExpression.
-multiplicExpression		--> multiplicExpression, ['/'], unaryExpression.
-multiplicExpression		--> multiplicExpression, ['%'], unaryExpression.
+multiplicExpression --> unaryExpression.
+multiplicExpression --> multiplicExpression, ['*'], unaryExpression.
+multiplicExpression --> multiplicExpression, ['/'], unaryExpression.
+multiplicExpression --> multiplicExpression, ['%'], unaryExpression.
 
-castExpression			--> ['('], primitiveType, [')'], unaryExpression.
-castExpression			--> ['('], referenceType, [')'], unaryExpressionNotPM.
+castExpression --> ['('], primitiveType, [')'], unaryExpression.
+castExpression --> ['('], referenceType, [')'], unaryExpressionNotPM.
 
-unaryExpression			--> preincrementExpression.
-unaryExpression			--> predecrementExpression.
-unaryExpression			--> ['+'], unaryExpression.
-unaryExpression			--> ['-'], unaryExpression.
-unaryExpression			--> unaryExpressionNotPM.
+unaryExpression --> preincrementExpression.
+unaryExpression --> predecrementExpression.
+unaryExpression --> ['+'], unaryExpression.
+unaryExpression --> ['-'], unaryExpression.
+unaryExpression --> unaryExpressionNotPM.
 
-predecrementExpression	--> ['--'], unaryExpression.
+predecrementExpression --> ['--'], unaryExpression.
 
-preincrementExpression	--> ['++'], unaryExpression.
+preincrementExpression --> ['++'], unaryExpression.
 
 
-unaryExpressionNotPM	--> postfixExpression.
-unaryExpressionNotPM	--> ['~'], unaryExpression.
-unaryExpressionNotPM	--> ['!'], unaryExpression.
-unaryExpressionNotPM	--> castExpression.
+unaryExpressionNotPM --> postfixExpression.
+unaryExpressionNotPM --> ['~'], unaryExpression.
+unaryExpressionNotPM --> ['!'], unaryExpression.
+unaryExpressionNotPM --> castExpression.
 
-postdecrementExpression	--> postfixExpression, ['--'].
+postdecrementExpression --> postfixExpression, ['--'].
 
-postincrementExpression	--> postfixExpression, ['++'].
+postincrementExpression --> postfixExpression, ['++'].
 
-postfixExpression		--> primary.
-postfixExpression		--> expressionName.
-postfixExpression		--> postdecrementExpression.
-postfixExpression		--> postincrementExpression.
+postfixExpression --> primary.
+postfixExpression --> expression_name.
+postfixExpression --> postdecrementExpression.
+postfixExpression --> postincrementExpression.
 
-methodInvocation		--> methodName, ['('], arguementList, [')'].
-methodInvocation		--> primary, ['.'], identifier, ['('], arguementList, [')'].
-methodInvocation		--> ['super'], identifier, ['('], arguementList, [')'].
+methodInvocation --> methodName, ['('], arguementList, [')'].
+methodInvocation --> primary, ['.'], identifier, ['('], arguementList, [')'].
+methodInvocation --> ['super'], identifier, ['('], arguementList, [')'].
 
-fieldAccess				--> primary, ['.'], identifier.
-fieldAccess				--> ['super'], ['.'], identifier.
+fieldAccess --> primary, ['.'], identifier.
+fieldAccess --> ['super'], ['.'], identifier.
 
-primary					--> primaryNoNewArray.
-primary					--> arrayCreateExpr.
+primary --> primaryNoNewArray, !.
+primary --> arrayCreateExpr.
 
-primaryNoNewArray		--> literal.
-primaryNoNewArray		--> ['this'].
-primaryNoNewArray		--> ['('], expression, [')'].
-primaryNoNewArray		--> classInstCreateExpr.
-primaryNoNewArray		--> fieldAccess.
-primaryNoNewArray		--> methodInvocation.
-primaryNoNewArray		--> arrayAccess.
+primaryNoNewArray --> literal.
+primaryNoNewArray --> ['this'].
+primaryNoNewArray --> ['('], expression, [')'].
+primaryNoNewArray --> classInstCreateExpr.
+primaryNoNewArray --> fieldAccess.
+primaryNoNewArray --> methodInvocation.
+primaryNoNewArray --> arrayAccess.
 
-classInstCreateExpr		--> ['new'], classType, ['('], arguementList, [')'].
+classInstCreateExpr --> ['new'], classType, ['('], arguementList, [')'].
 
-arguementList			--> [].
-arguementList			--> expression.
-arguementList			--> arguementList, [','], expression.
+arguementList --> [].
+arguementList --> expression.
+arguementList --> arguementList, [','], expression.
 
-arrayCreateExpr			--> ['new'], primitiveType, dimExprs, dims.
-arrayCreateExpr			--> ['new'], classInterType, dimExprs, dims.
+arrayCreateExpr --> ['new'], primitiveType, dimExprs, dims.
+arrayCreateExpr --> ['new'], classInterType, dimExprs, dims.
 
-dimExprs				--> dimExpr.
-dimExprs				--> dimExprs, dimExpr.
+dimExprs --> dimExpr.
+dimExprs --> dimExprs, dimExpr.
 
-dimExpr					--> ['['], expression, [']'].
+dimExpr --> ['['], expression, [']'].
 
-dims					--> [].
-dims 					--> ['[]'].
-dims					--> dims, ['[]'].
+dims --> [].
+dims --> ['[]'].
+dims --> dims, ['[]'].
 
-arrayAccess				--> expressionName, ['['], expression, [']'].
-arrayAccess				--> primaryNoNewArray, ['['], expression, [']'].
+arrayAccess --> expression_name, ['['], expression, [']'].
+arrayAccess --> primaryNoNewArray, ['['], expression, [']'].
 
 %---------Tokens------------
 classpackageName --> typeName, identifier.
@@ -355,193 +355,67 @@ literal --> string_literal.
 literal --> null_literal.
 
 integer_literal --> decimal_int_literal.
-integer_literal --> hex_int_literal.
-integer_literal --> octal_int_literal.
 
-decimal_int_literal --> decimal_numeral. % int_suffix.
+decimal_int_literal --> decimal_numeral.
 
-hex_int_literal --> hex_numeral. % int_suffix.
+decimal_numeral --> [I], {integer(I)}.
 
-octal_int_literal --> octal_numeral. % int_suffix.
+floating_literal --> [I], {float(I)}.
 
-% int_suffix -->
+boolean_literal --> [true].
+boolean_literal --> [false].
 
-decimal_numeral --> ['0'].
-decimal_numeral --> non_zero, digits.
+character_literal --> [I], {atom(I)}.
 
-digits --> digit.
-digits --> digits, digit.
+string_literal --> [S], {string(S)}.
 
-digit --> ['0'].
-digit --> non_zero.
-
-non_zero --> ['1'].
-non_zero --> ['2'].
-non_zero --> ['3'].
-non_zero --> ['4'].
-non_zero --> ['5'].
-non_zero --> ['6'].
-non_zero --> ['7'].
-non_zero --> ['8'].
-non_zero --> ['9'].
-
-hex_numeral --> hex_digit.
-hex_numeral --> hex_numeral, hex_digit.
-
-hex_digit --> ['0'].
-hex_digit --> ['1'].
-hex_digit --> ['2'].
-hex_digit --> ['3'].
-hex_digit --> ['4'].
-hex_digit --> ['5'].
-hex_digit --> ['6'].
-hex_digit --> ['7'].
-hex_digit --> ['8'].
-hex_digit --> ['9'].
-hex_digit --> ['a'].
-hex_digit --> ['b'].
-hex_digit --> ['c'].
-hex_digit --> ['d'].
-hex_digit --> ['e'].
-hex_digit --> ['f'].
-hex_digit --> ['A'].
-hex_digit --> ['B'].
-hex_digit --> ['C'].
-hex_digit --> ['D'].
-hex_digit --> ['E'].
-hex_digit --> ['F'].
-
-octal_numeral --> octal_digit.
-octal_numeral --> octal_numeral, octal_digit.
-
-octal_digit --> ['0'].
-octal_digit --> ['1'].
-octal_digit --> ['2'].
-octal_digit --> ['3'].
-octal_digit --> ['4'].
-octal_digit --> ['5'].
-octal_digit --> ['6'].
-octal_digit --> ['7'].
-
-floating_literal --> digits, ['.'], digits.
-floating_literal --> ['.'], digits.
-
-boolean_literal --> true.
-boolean_literal --> false.
-
-character_literal --> char.
-character_literal --> [''].
-
-% Looking into a better way to do this.
-char --> ['a'].
-char --> ['b'].
-char --> ['c'].
-char --> ['d'].
-char --> ['e'].
-char --> ['f'].
-char --> ['g'].
-char --> ['h'].
-char --> ['i'].
-char --> ['j'].
-char --> ['k'].
-char --> ['l'].
-char --> ['m'].
-char --> ['n'].
-char --> ['o'].
-char --> ['p'].
-char --> ['q'].
-char --> ['r'].
-char --> ['s'].
-char --> ['t'].
-char --> ['u'].
-char --> ['v'].
-char --> ['w'].
-char --> ['x'].
-char --> ['y'].
-char --> ['z'].
-char --> ['A'].
-char --> ['B'].
-char --> ['C'].
-char --> ['D'].
-char --> ['E'].
-char --> ['F'].
-char --> ['G'].
-char --> ['H'].
-char --> ['I'].
-char --> ['J'].
-char --> ['K'].
-char --> ['L'].
-char --> ['M'].
-char --> ['N'].
-char --> ['O'].
-char --> ['P'].
-char --> ['Q'].
-char --> ['R'].
-char --> ['S'].
-char --> ['T'].
-char --> ['U'].
-char --> ['V'].
-char --> ['W'].
-char --> ['X'].
-char --> ['Y'].
-char --> ['Z'].
-
-string_literal --> string_characters.
-
-string_characters --> string.
-string_characters --> string_characters, string.
-string_characters --> [""].
-
-string --> char.
-string --> digit.
-
-null_literal --> ['null'].
+null_literal --> [null].
 
 % Not sure if this is important
-keyword --> abstract.
-keyword --> char.
-keyword --> double.
-keyword --> for.
-keyword --> int.
-keyword --> private.
-keyword --> super.
-keyword --> transient.
-keyword --> boolean.
-keyword --> class.
-keyword --> else.
-keyword --> goto.
-keyword --> interface.
-keyword --> protected.
-keyword --> switch.
-keyword --> try.
-keyword --> break.
-keyword --> const.
-keyword --> extends.
-keyword --> if.
-keyword --> long.
-keyword --> public.
-keyword --> synchronized.
-keyword --> void.
-keyword --> byte.
-keyword --> continue.
-keyword --> final.
-keyword --> implements.
-keyword --> native.
-keyword --> return.
-keyword --> short.
-keyword --> this.
-keyword --> volatile.
-keyword --> case.
-keyword --> default.
-keyword --> finally.
-keyword --> float.
-keyword --> import.
-keyword --> instanceof.
-keyword --> new.
-keyword --> static.
-keyword --> throw.
-keyword --> while.
-keyword --> catch.
-keyword --> do.
-keyword --> package.
-keyword --> throws.
+keyword --> [abstract].
+keyword --> [char].
+keyword --> [double].
+keyword --> [for].
+keyword --> [int].
+keyword --> [private].
+keyword --> [super].
+keyword --> [transient].
+keyword --> [boolean].
+keyword --> [class].
+keyword --> [else].
+keyword --> [goto].
+keyword --> [interface].
+keyword --> [protected].
+keyword --> [switch].
+keyword --> [try].
+keyword --> [break].
+keyword --> [const].
+keyword --> [extends].
+keyword --> [if].
+keyword --> [long].
+keyword --> [public].
+keyword --> [synchronized].
+keyword --> [void].
+keyword --> [byte].
+keyword --> [continue].
+keyword --> [final].
+keyword --> [implements].
+keyword --> [native].
+keyword --> [return].
+keyword --> [short].
+keyword --> [this].
+keyword --> [volatile].
+keyword --> [case].
+keyword --> [default].
+keyword --> [finally].
+keyword --> [float].
+keyword --> [import].
+keyword --> [instanceof].
+keyword --> [new].
+keyword --> [static].
+keyword --> [throw].
+keyword --> [while].
+keyword --> [catch].
+keyword --> [do].
+keyword --> [package].
+keyword --> [throws].
