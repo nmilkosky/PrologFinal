@@ -1,3 +1,4 @@
+%--------------------------Declarations-------------------------
 classDeclaration --> classModifiers, [class], identifier, super, interfaces, classBody.
 identifier --> [I], {atom(I)}.
 
@@ -43,9 +44,11 @@ formalParameter --> arrayType, identifier, [';'].
 throws --> [].
 throws --> [throws], classpackageName.
 
-constructorBody --> ['{'], invocation, blockStatements, ['}'].
+constructorBody --> ['{'], constructorInvocation, blockStatements, ['}'].
 
-invocation --> []. %Needs completion
+constructorInvocation --> [].
+constructorInvocation --> [this], ['('], arguementList, [')'], [';'].
+constructorInvocation --> [super], ['('], arguementList, [')'], [';'].
 
 fieldModifiers --> fieldModifier.
 fieldModifiers --> fieldModifier, fieldModifiers.
@@ -57,8 +60,6 @@ field_modifier(static).
 field_modifier(final).
 field_modifier(transient).
 field_modifier(volatile).
-
-blockStatements --> []. %Needs completion
 
 methodHeader --> []. %Needs completion
 
@@ -89,6 +90,246 @@ referenceType --> classpackageName.
 arrayType --> type, [[]], multiDimension.
 multiDimension --> [].
 multiDimension --> [[]], multiDimension.
+
+%--------------------------Blocks and Commands-------------------
+block --> ['{'], block_statements, ['}'].
+
+blockStatements --> blockStatement.
+blockStatements --> blockStatements, blockStatement.
+
+blockStatement --> localvardecStatement.
+blockStatement --> statement.
+
+localvardecStatement --> localvardec, [';'].
+localvardec --> type, varDeclarators.
+
+statement --> simpleStatement.
+statement --> labeledStatement.
+statement --> ifStatement.
+statement --> if_elseStatement.
+statement --> whileStatement.
+statement --> forStatement.
+
+%left out synchronized statement
+simpleStatement --> block.
+simpleStatement --> emptyStatement.
+simpleStatement --> expressionStatement. %dependent on expressions.pl
+simpleStatement --> switchStatement.
+simpleStatement --> doStatement.
+simpleStatement --> breakStatement.
+simpleStatement --> continueStatement.
+simpleStatement --> returnStatement.
+simpleStatement --> continueStatement.
+simpleStatement --> throwsStatement.
+simpleStatement --> tryStatement.
+
+emptyStatement --> [;].
+
+labeledStatement --> identifier, [':'], statement.
+
+expressionStatement --> exprStatement,[';'].
+
+exprStatement --> assignmentExpression.
+exprStatement --> preIncrement_expr.
+exprStatement --> postIncrement_expr.
+exprStatement --> preDecrement_expr.
+exprStatement --> postDecrement_expr.
+exprStatement --> method_invocation.
+exprStatement --> create_class_instance_expr.
+
+%Allow optional brackets (add new rules?)
+ifStatement --> [if], ['('], expression, [')'], statement.
+if_elseStatement --> [if], ['('], expression, [')'], statement, [else], statement.
+
+switchStatement --> [switch], ['('], expression, [')'], switchBlock.
+switchBlock --> ['{'], switchGroups, switchLabels, ['}'].
+switchBlock --> ['{'], switchGroups, ['}'].
+switchBlock --> ['{'], switchLabels, ['}'].
+switchBlock --> ['{'], ['}'].
+
+switchGroups --> switchLabels, blockStatements.
+
+switchLabels --> switchLabel.
+switchLabels --> switchLabels, switchLabel.
+
+switchLabel --> [case], constantExpression, [':'].
+switchLabel --> [default], [':'].
+
+whileStatement --> [while], ['('], expression, [')'], statement.
+
+doStatement --> [do], statement, [while], expression, [';'].
+
+%Are expression and for_counter optional?
+forStatement --> [for], ['('], forInit, [';'], expression, [';'], forCounter, [')'], statement.
+forStatement --> [for], ['('], forInit, [';'], expression, [')'], statement.
+forStatement --> [for], ['('], forInit, [';'], forCounter, [')'], statement.
+forStatement --> [for], ['('], expression, [';'], forCounter, [')'], statement.
+forStatement --> [for], ['('], forInit, [')'], statement.
+forStatement --> [for], ['('], expression, [')'], statement.
+forStatement --> [for], ['('], forCounter, [')'], statement.
+forStatement --> [for], ['('], [')'], statement.
+
+forInit --> exprStatements.
+forInit --> localvardec.
+
+exprStatements --> exprStatement.
+exprStatements --> exprStatements, exprStatement.
+
+breakStatement --> [break], [';'].
+breakStatement --> [break], identifier, [';'].
+
+continuteStatement --> [continue], [';'].
+continuteStatement --> [continue], identifier, [';'].
+
+returnStatement --> [return], [';'].
+returnStatement --> [return], expression, [';'].
+
+throwsStatement --> [throw], expression, [';'].
+
+tryStatement --> [try], block, catches.
+tryStatement --> [try], block, finally.
+catches --> catch_clause.
+catches --> catches, catchClause.
+catchClause --> [catch], ['('], formalParameter, [')'], block.
+finally --> [finally], block.
+
+%----------------------------Expressions--------------------
+constantExpression 	--> expression.
+
+expression		--> assignmentExpression.
+
+assignmentExpression	--> conditionalExpression.
+assignmentExpression	--> assignment.
+
+assignment		--> leftSide, assignmentOper, assignmentExpression.
+
+leftSide		--> expressionName.
+leftSide		--> fieldAccess.
+leftSide		--> arrayAccess.
+
+assignmentOper		--> [AOper], {assignment_operator(AOper)}.
+assignment_operator('=').
+assignment_operator('*=').
+assignment_operator('/=').
+assignment_operator('%=').
+assignment_operator('+=').
+assignment_operator('-=').
+assignment_operator('<<=').
+assignment_operator('>>=').
+assignment_operator('>>>=').
+assignment_operator('&=').
+assignment_operator('^=').
+assignment_operator('|=').
+
+conditionalExpression	--> conditionalOrExpression.
+conditionalExpression	--> conditionalOrExpression, ['?'], expression, [':'], conditionalExpression.
+
+conditionalOrExpression	--> conditionalAndExpress.
+conditionalOrExpression	--> conditionalOrExpression, ['||'], conditionalAndExpress.
+
+conditionalAndExpress	--> inclusiveOrExpression.
+conditionalAndExpress	--> conditionalAndExpress, ['&&'], inclusiveOrExpression.
+
+inclusiveOrExpression	--> exclusiveOrExpression.
+inclusiveOrExpression	--> inclusiveOrExpression, ['|'], exclusiveOrExpression.
+
+exclusiveOrExpression	--> andExpression.
+exclusiveOrExpression	--> exclusiveOrExpression, ['^'], andExpression.
+
+andExpression			-->	equalityExpression.
+andExpression			--> andExpression, ['&'],  equalityExpression.
+
+equalityExpression		--> relationalExpression.
+equalityExpression		--> equalityExpression, ['=='], relationalExpression.
+equalityExpression		--> equalityExpression, ['!='], relationalExpression.
+
+relationalExpression	--> shiftExpression.
+relationalExpression	--> relationalExpression, ['<'], shiftExpression.
+relationalExpression	--> relationalExpression, ['>'], shiftExpression.
+relationalExpression	--> relationalExpression, ['<='], shiftExpression.
+relationalExpression	--> relationalExpression, ['>='], shiftExpression.
+relationalExpression	--> relationalExpression, ['instanceof'], referenceType.
+
+shiftExpression			--> additiveExpression.
+shiftExpression			--> shiftExpression, ['<<'], additiveExpression.
+shiftExpression			--> shiftExpression, ['>>'], additiveExpression.
+shiftExpression			--> shiftExpression, ['>>>'], additiveExpression.
+
+additiveExpression		--> multiplicExpression.
+additiveExpression		--> additiveExpression, ['+'], multiplicExpression.
+additiveExpression		--> additiveExpression, ['-'], multiplicExpression.
+
+multiplicExpression		--> unaryExpression.
+multiplicExpression		--> multiplicExpression, ['*'], unaryExpression.
+multiplicExpression		--> multiplicExpression, ['/'], unaryExpression.
+multiplicExpression		--> multiplicExpression, ['%'], unaryExpression.
+
+castExpression			--> ['('], primitiveType, [')'], unaryExpression.
+castExpression			--> ['('], referenceType, [')'], unaryExpressionNotPM.
+
+unaryExpression			--> preincrementExpression.
+unaryExpression			--> predecrementExpression.
+unaryExpression			--> ['+'], unaryExpression.
+unaryExpression			--> ['-'], unaryExpression.
+unaryExpression			--> unaryExpressionNotPM.
+
+predecrementExpression	--> ['--'], unaryExpression.
+
+preincrementExpression	--> ['++'], unaryExpression.
+
+
+unaryExpressionNotPM	--> postfixExpression.
+unaryExpressionNotPM	--> ['~'], unaryExpression.
+unaryExpressionNotPM	--> ['!'], unaryExpression.
+unaryExpressionNotPM	--> castExpression.
+
+postdecrementExpression	--> postfixExpression, ['--'].
+
+postincrementExpression	--> postfixExpression, ['++'].
+
+postfixExpression		--> primary.
+postfixExpression		--> expressionName.
+postfixExpression		--> postdecrementExpression.
+postfixExpression		--> postincrementExpression.
+
+methodInvocation		--> methodName, ['('], arguementList, [')'].
+methodInvocation		--> primary, ['.'], identifier, ['('], arguementList, [')'].
+methodInvocation		--> ['super'], identifier, ['('], arguementList, [')'].
+
+fieldAccess				--> primary, ['.'], identifier.
+fieldAccess				--> ['super'], ['.'], identifier.
+
+primary					--> primaryNoNewArray.
+primary					--> arrayCreateExpr.
+
+primaryNoNewArray		--> literal.
+primaryNoNewArray		--> ['this'].
+primaryNoNewArray		--> ['('], expression, [')'].
+primaryNoNewArray		--> classInstCreateExpr.
+primaryNoNewArray		--> fieldAccess.
+primaryNoNewArray		--> methodInvocation.
+primaryNoNewArray		--> arrayAccess.
+
+classInstCreateExpr		--> ['new'], classType, ['('], arguementList, [')'].
+
+arguementList			--> [].
+arguementList			--> expression.
+arguementList			--> arguementList, [','], expression.
+
+arrayCreateExpr			--> ['new'], primitiveType, dimExprs, dims.
+arrayCreateExpr			--> ['new'], classInterType, dimExprs, dims.
+
+dimExprs				--> dimExpr.
+dimExprs				--> dimExprs, dimExpr.
+
+dimExpr					--> ['['], expression, [']'].
+
+dims					--> [].
+dims 					--> ['[]'].
+dims					--> dims, ['[]'].
+
+arrayAccess				--> expressionName, ['['], expression, [']'].
+arrayAccess				--> primaryNoNewArray, ['['], expression, [']'].
 
 %---------Tokens------------
 classpackageName --> typeName, identifier.
