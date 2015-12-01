@@ -9,10 +9,10 @@ class_modifier(abstract).
 class_modifier(final).
 
 super --> [].
-super --> [extends], identifier.
+super --> [extends], classpackageName.
 
 interfaces --> [].
-interfaces --> [implements], identifier.
+interfaces --> [implements], classpackageName.
 
 classBody --> ['{'], classBodyDeclaration, ['}'].
 
@@ -35,10 +35,13 @@ constructor_modifier(private).
 
 constructorDeclarator --> identifier, ['('], formalParameter, [')'].
 
-formalParameter --> type, identifier.
+formalParameterList --> formalParameter.
+formalParameterList --> formalParameter, formalParameterList.
+formalParameter --> type, identifier, [';'].
+formalParameter --> arrayType, identifier, [';'].
 
 throws --> [].
-throws --> [throws], identifier.
+throws --> [throws], classpackageName.
 
 constructorBody --> ['{'], invocation, blockStatements, ['}'].
 
@@ -81,15 +84,14 @@ integral_type(char).
 floating_type(float).
 floating_type(double).
 
-referenceType --> classinterfaceType.
-referenceType --> arrayType.
+referenceType --> classpackageName.
 
-classinterfaceType --> packagetypeName.
-
-arrayType --> ['[]'].
+arrayType --> type, [[]], multiDimension.
+multiDimension --> [].
+multiDimension --> [[]], multiDimension.
 
 %---------Tokens------------
-packagetypeName --> typeName, identifier.
+classpackageName --> typeName, identifier.
 
 typeName --> [I], {string(I)}.
 
