@@ -1,9 +1,9 @@
 /** 
-* Reads in a file called input.txt. Parses the input into elements and stores them in a list
+* Reads in a file called input.txt. Parses the input into atoms and stores them in a list
 * using a whitespace, tabs, and new lines as delimeters.
 * 
 * Usage: Generate a list for your Java source file with query: ?- parse_file.
-* (list generated may need some minor editing to be compatible with parser)
+
 */
 
 parse_file :-
@@ -15,7 +15,7 @@ parse_file :-
     atom_string(Atom, String),
     normalize_space(atom(Out), String), %handles whitespace for tab characters
     atomic_list_concat(Split, ' ', Out), 
-    write(Split),
+    writeq(Split), %Atoms that need quotes are quoted.
     nl.
 
 read_file(Stream,[]) :-

@@ -153,7 +153,7 @@ block --> ['{'], ['}'].
 block --> ['{'], blockStatements, ['}'].
 
 blockStatements --> blockStatement.
-blockStatements --> blockStatements, blockStatement.
+blockStatements --> blockStatement, blockStatements.
 
 blockStatement --> localvardecStatement.
 blockStatement --> statement.
@@ -187,15 +187,9 @@ labeledStatement --> identifier, [':'], statement.
 
 expressionStatement --> exprStatement,[';'].
 
-exprStatement --> assignmentExpression.
-exprStatement --> preincrementExpression.
-exprStatement --> postincrementExpression.
-exprStatement --> predecrementExpression.
-exprStatement --> postdecrementExpression.
-exprStatement --> methodInvocation.
-exprStatement --> classInstCreateExpr.
-
+exprStatement --> expression.
 %Allow optional brackets (add new rules?)
+
 ifStatement --> [if], ['('], expression, [')'], statement.
 if_elseStatement --> [if], ['('], expression, [')'], statement, [else], statement.
 
@@ -236,8 +230,8 @@ exprStatements --> exprStatement, exprStatements.
 breakStatement --> [break], [';'].
 breakStatement --> [break], identifier, [';'].
 
-continuteStatement --> [continue], [';'].
-continuteStatement --> [continue], identifier, [';'].
+continueStatement --> [continue], [';'].
+continueStatement --> [continue], identifier, [';'].
 
 returnStatement --> [return], [';'].
 returnStatement --> [return], expression, [';'].
@@ -261,9 +255,12 @@ assignmentExpression --> assignment.
 
 assignment --> leftSide, assignmentOper, assignmentExpression.
 
+leftSide --> initVar.
 leftSide --> expression_name.
 leftSide --> fieldAccess.
 leftSide --> arrayAccess.
+
+initVar --> type, expression_name.
 
 assignmentOper  --> [AOper], {assignment_operator(AOper)}.
 assignment_operator('=').
@@ -381,15 +378,15 @@ interfaceTypeList --> interfaceType.
 interfaceTypeList --> interfaceType, interfaceTypeList.
 interfaceType --> typeName.
 
-typeName --> [I], {string(I)}.
+typeName --> [I], {atom(I)}.
 
 simple_type --> identifier.
 
 expression_name --> identifier.
-expression_name --> ambiguous_name, identifier.
+%expression_name --> ambiguous_name, identifier.
 
 method_name --> identifier.
-method_name --> ambiguous_name, identifier.
+%method_name --> ambiguous_name, identifier.
 
 ambiguous_name --> identifier.
 ambiguous_name --> ambiguous_name, identifier.
