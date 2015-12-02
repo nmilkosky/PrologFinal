@@ -187,15 +187,9 @@ labeledStatement --> identifier, [':'], statement.
 
 expressionStatement --> exprStatement,[';'].
 
-exprStatement --> assignmentExpression.
-exprStatement --> preincrementExpression.
-exprStatement --> postincrementExpression.
-exprStatement --> predecrementExpression.
-exprStatement --> postdecrementExpression.
-exprStatement --> methodInvocation.
-exprStatement --> classInstCreateExpr.
-
+exprStatement --> expression.
 %Allow optional brackets (add new rules?)
+
 ifStatement --> [if], ['('], expression, [')'], statement.
 if_elseStatement --> [if], ['('], expression, [')'], statement, [else], statement.
 
