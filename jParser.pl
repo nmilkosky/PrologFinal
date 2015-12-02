@@ -18,15 +18,18 @@ super --> [extends], classType.
 	
 interfaces --> [implements], interfaceTypeList.
 
-classBody --> ['{'], ['}'].
-classBody --> ['{'], classBodyDeclarations, ['}'].
+classBody --> classBlock.
+
+classBlock --> ['{'], ['}'].
+classBlock --> ['{'], classBodyDeclarations, ['}'].
 
 classBodyDeclarations --> classBodyDeclaration.
 classBodyDeclarations --> classBodyDeclaration, classBodyDeclarations.
+
 classBodyDeclaration --> classMemberDeclaration.
+classBodyDeclaration --> constructorDeclaration.
  
 classMemberDeclaration --> fieldDeclaration.
-classMemberDeclaration --> constructorDeclaration.
 classMemberDeclaration --> methodDeclaration.
 
 staticInitializer --> [static].
@@ -49,15 +52,19 @@ formalParameter --> arrayType, identifier.
 
 throws --> [throws], classTypeList.
 
-constructorBody --> ['{'], ['}'].
-constructorBody --> ['{'], constructorInvocation, ['}'].
-constructorBody --> ['{'], blockStatements, ['}'].
-constructorBody --> ['{'], constructorInvocation, blockStatements, ['}'].
+constructorBlock --> ['{'], ['}'].
+constructorBlock --> ['{'], constructorBody, ['}'].
 
+constructorBody --> constructorInvocation.
+constructorBody --> blockStatements.
+constructorBody --> constructorInvocation, blockStatements.
+
+constructorInvocation --> [this], ['('], [')'], [';'].
 constructorInvocation --> [this], ['('], argumentList, [')'], [';'].
+constructorInvocation --> [super], ['('], [')'], [';'].
 constructorInvocation --> [super], ['('], argumentList, [')'], [';'].
 
-fieldDeclaration --> fieldModifiers, type, varDeclarators.
+fieldDeclaration --> fieldModifiers, type, varDeclarators, [';'].
 
 fieldModifiers --> fieldModifier.
 fieldModifiers --> fieldModifier, fieldModifiers.
@@ -71,9 +78,9 @@ field_modifier(transient).
 field_modifier(volatile).
 
 varDeclarators --> varDeclatator.
-varDeclatators --> varDeclarators, varDeclatator.
-varDeclatator --> vardecId, [';'].
-varDeclatator --> vardecId, [=], varInit, [';'].
+varDeclatators --> varDeclarator, varDeclatators.
+varDeclatator --> vardecId.
+varDeclatator --> vardecId, ['='], varInit.
 
 vardecId --> identifier.
 vardecId --> identifier, [[]].
@@ -100,13 +107,11 @@ method_modifier(abstract).
 method_modifier(final).
 method_modifier(synchronized).
 method_modifier(native).
-method_modifier(main).
 
 methodDeclarator --> identifier, ['('], [')'].
 methodDeclarator --> identifier, ['('], formalParameterList, [')'].
 
-methodBody --> ['{'], ['}'].
-methodBody --> ['{'], block, ['}'].
+methodBody --> block.
 
 varInit --> expression.
 varInit --> arrayInit.
@@ -114,7 +119,7 @@ varInit --> arrayInit.
 arrayInit --> ['{'], varInits, ['}'].
 
 varInits --> varInit.
-varInits --> varInit, varInits.
+varInits --> varInits, varInit.
 
 %---------------------------Types-----------------------------
 type --> primitiveType.
@@ -138,12 +143,14 @@ floating_type(double).
 
 referenceType --> classpackageName.
 
+arrayType --> type, [[]].
 arrayType --> type, [[]], multiDimension.
-multiDimension --> [].
+multiDimension --> [[]].
 multiDimension --> [[]], multiDimension.
 
 %--------------------------Blocks and Commands-------------------
-block --> ['{'], block_statements, ['}'].
+block --> ['{'], ['}'].
+block --> ['{'], blockStatements, ['}'].
 
 blockStatements --> blockStatement.
 blockStatements --> blockStatements, blockStatement.
@@ -174,7 +181,7 @@ simpleStatement --> continueStatement.
 simpleStatement --> throwsStatement.
 simpleStatement --> tryStatement.
 
-emptyStatement --> [;].
+emptyStatement --> [';'].
 
 labeledStatement --> identifier, [':'], statement.
 
@@ -201,7 +208,7 @@ switchBlock --> ['{'], ['}'].
 switchGroups --> switchLabels, blockStatements.
 
 switchLabels --> switchLabel.
-switchLabels --> switchLabels, switchLabel.
+switchLabels --> switchLabel, switchLabels.
 
 switchLabel --> [case], constantExpression, [':'].
 switchLabel --> [default], [':'].
@@ -224,7 +231,7 @@ forInit --> exprStatements.
 forInit --> localvardec.
 
 exprStatements --> exprStatement.
-exprStatements --> exprStatements, exprStatement.
+exprStatements --> exprStatement, exprStatements.
 
 breakStatement --> [break], [';'].
 breakStatement --> [break], identifier, [';'].
@@ -320,7 +327,9 @@ postfixExpression --> postincrementExpression.
 postfixExpression --> expression_name.
 
 methodInvocation --> fieldAccess.
+methodInvocation --> identifier, ['('], [')'].
 methodInvocation --> identifier, ['('], argumentList, [')'].
+methodInvocation --> ['super'], ['('], [')'].
 methodInvocation --> ['super'], ['('], argumentList, [')'].
 methodInvocation --> identifier, ['.'], methodInvocation.
 
@@ -339,13 +348,15 @@ primaryNoNewArray --> classInstCreateExpr.
 %primaryNoNewArray --> methodInvocation.
 %primaryNoNewArray --> arrayAccess.
 
+classInstCreateExpr --> ['new'], classType, ['('], [')'].
 classInstCreateExpr --> ['new'], classType, ['('], argumentList, [')'].
 
-argumentList --> [].
 argumentList --> identifier.
 argumentList --> identifier, [','], argumentList.
 
+arrayCreateExpr --> ['new'], primitiveType, dimExprs.
 arrayCreateExpr --> ['new'], primitiveType, dimExprs, dims.
+arrayCreateExpr --> ['new'], classInterType, dimExprs.
 arrayCreateExpr --> ['new'], classInterType, dimExprs, dims.
 
 dimExprs --> dimExpr.
@@ -353,7 +364,6 @@ dimExprs --> dimExpr, dimExprs.
 
 dimExpr --> ['['], expression, [']'].
 
-dims --> [].
 dims --> ['[]'].
 dims --> ['[]'], dims.
 
