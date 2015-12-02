@@ -51,8 +51,8 @@ throws --> [throws], classpackageName.
 constructorBody --> ['{'], constructorInvocation, blockStatements, ['}'].
 
 constructorInvocation --> [].
-constructorInvocation --> [this], ['('], arguementList, [')'], [';'].
-constructorInvocation --> [super], ['('], arguementList, [')'], [';'].
+constructorInvocation --> [this], ['('], argumentList, [')'], [';'].
+constructorInvocation --> [super], ['('], argumentList, [')'], [';'].
 
 fieldDeclaration --> [].
 fieldDeclaration --> fieldModifiers, type, varDeclarators.
@@ -176,12 +176,12 @@ labeledStatement --> identifier, [':'], statement.
 expressionStatement --> exprStatement,[';'].
 
 exprStatement --> assignmentExpression.
-exprStatement --> preIncrement_expr.
-exprStatement --> postIncrement_expr.
-exprStatement --> preDecrement_expr.
-exprStatement --> postDecrement_expr.
-exprStatement --> method_invocation.
-exprStatement --> create_class_instance_expr.
+exprStatement --> preincrementExpression.
+exprStatement --> postincrementExpression.
+exprStatement --> predecrementExpression.
+exprStatement --> postdecrementExpression.
+exprStatement --> methodInvocation.
+exprStatement --> classInstCreateExpr.
 
 %Allow optional brackets (add new rules?)
 ifStatement --> [if], ['('], expression, [')'], statement.
@@ -267,115 +267,93 @@ assignment_operator('&=').
 assignment_operator('^=').
 assignment_operator('|=').
 
-conditionalExpression --> conditionalOrExpression.
-conditionalExpression --> conditionalOrExpression, ['?'], expression, [':'], conditionalExpression.
-
-conditionalOrExpression --> conditionalAndExpress.
-conditionalOrExpression --> conditionalOrExpression, ['||'], conditionalAndExpress.
-
-conditionalAndExpress --> inclusiveOrExpression.
-conditionalAndExpress --> conditionalAndExpress, ['&&'], inclusiveOrExpression.
-
-inclusiveOrExpression --> exclusiveOrExpression.
-inclusiveOrExpression --> inclusiveOrExpression, ['|'], exclusiveOrExpression.
-
-exclusiveOrExpression --> andExpression.
-exclusiveOrExpression --> exclusiveOrExpression, ['^'], andExpression.
-
-andExpression --> equalityExpression.
-andExpression --> andExpression, ['&'],  equalityExpression.
+conditionalExpression --> equalityExpression.
+conditionalExpression --> identifier, ['||'], conditionalExpression.
+conditionalExpression --> identifier, ['&&'], conditionalExpression.
 
 equalityExpression --> relationalExpression.
-equalityExpression --> equalityExpression, ['=='], relationalExpression.
-equalityExpression --> equalityExpression, ['!='], relationalExpression.
+equalityExpression --> identifier, ['=='], equalityExpression.
+equalityExpression --> identifier, ['!='], equalityExpression.
 
-relationalExpression --> shiftExpression.
-relationalExpression --> relationalExpression, ['<'], shiftExpression.
-relationalExpression --> relationalExpression, ['>'], shiftExpression.
-relationalExpression --> relationalExpression, ['<='], shiftExpression.
-relationalExpression --> relationalExpression, ['>='], shiftExpression.
-relationalExpression --> relationalExpression, ['instanceof'], referenceType.
-
-shiftExpression --> additiveExpression.
-shiftExpression --> shiftExpression, ['<<'], additiveExpression.
-shiftExpression --> shiftExpression, ['>>'], additiveExpression.
-shiftExpression --> shiftExpression, ['>>>'], additiveExpression.
+relationalExpression --> additiveExpression.
+relationalExpression --> identifier, ['<'], relationalExpression.
+relationalExpression --> identifier, ['>'], relationalExpression.
+relationalExpression --> identifier, ['<='], relationalExpression.
+relationalExpression --> identifier, ['>='], relationalExpression.
+relationalExpression --> identifier, ['instanceof'], relationalExpression.
 
 additiveExpression --> multiplicExpression.
-additiveExpression --> additiveExpression, ['+'], multiplicExpression.
-additiveExpression --> additiveExpression, ['-'], multiplicExpression.
+additiveExpression --> identifier, ['+'], additiveExpression.
+additiveExpression --> identifier, ['-'], additiveExpression.
 
 multiplicExpression --> unaryExpression.
-multiplicExpression --> multiplicExpression, ['*'], unaryExpression.
-multiplicExpression --> multiplicExpression, ['/'], unaryExpression.
-multiplicExpression --> multiplicExpression, ['%'], unaryExpression.
+multiplicExpression --> identifier, ['*'], multiplicExpression.
+multiplicExpression --> identifier, ['/'], multiplicExpression.
+multiplicExpression --> identifier, ['%'], multiplicExpression.
 
 castExpression --> ['('], primitiveType, [')'], unaryExpression.
 castExpression --> ['('], referenceType, [')'], unaryExpressionNotPM.
 
+unaryExpression --> unaryExpressionNotPM.
 unaryExpression --> preincrementExpression.
 unaryExpression --> predecrementExpression.
-unaryExpression --> ['+'], unaryExpression.
-unaryExpression --> ['-'], unaryExpression.
-unaryExpression --> unaryExpressionNotPM.
 
-predecrementExpression --> ['--'], unaryExpression.
 
-preincrementExpression --> ['++'], unaryExpression.
+predecrementExpression --> ['--'], identifier.
+preincrementExpression --> ['++'], identifier.
 
 
 unaryExpressionNotPM --> postfixExpression.
-unaryExpressionNotPM --> ['~'], unaryExpression.
-unaryExpressionNotPM --> ['!'], unaryExpression.
 unaryExpressionNotPM --> castExpression.
 
-postdecrementExpression --> postfixExpression, ['--'].
+postdecrementExpression --> identifier, ['--'].
+postincrementExpression --> identifier, ['++'].
 
-postincrementExpression --> postfixExpression, ['++'].
-
-postfixExpression --> primary.
-postfixExpression --> expression_name.
+postfixExpression --> methodInvocation.
 postfixExpression --> postdecrementExpression.
 postfixExpression --> postincrementExpression.
+postfixExpression --> expression_name.
 
-methodInvocation --> methodName, ['('], arguementList, [')'].
-methodInvocation --> primary, ['.'], identifier, ['('], arguementList, [')'].
-methodInvocation --> ['super'], identifier, ['('], arguementList, [')'].
+methodInvocation --> fieldAccess.
+methodInvocation --> identifier, ['('], argumentList, [')'].
+methodInvocation --> ['super'], ['('], argumentList, [')'].
+methodInvocation --> identifier, ['.'], methodInvocation.
 
-fieldAccess --> primary, ['.'], identifier.
-fieldAccess --> ['super'], ['.'], identifier.
+fieldAccess --> primary.
+fieldAccess --> identifier, ['.'], identifier.
+fieldAccess --> identifier, ['.'], fieldAccess.
 
-primary --> primaryNoNewArray, !.
+primary --> primaryNoNewArray.
 primary --> arrayCreateExpr.
 
 primaryNoNewArray --> literal.
 primaryNoNewArray --> ['this'].
 primaryNoNewArray --> ['('], expression, [')'].
 primaryNoNewArray --> classInstCreateExpr.
-primaryNoNewArray --> fieldAccess.
-primaryNoNewArray --> methodInvocation.
-primaryNoNewArray --> arrayAccess.
+%primaryNoNewArray --> fieldAccess.
+%primaryNoNewArray --> methodInvocation.
+%primaryNoNewArray --> arrayAccess.
 
-classInstCreateExpr --> ['new'], classType, ['('], arguementList, [')'].
+classInstCreateExpr --> ['new'], classType, ['('], argumentList, [')'].
 
-arguementList --> [].
-arguementList --> expression.
-arguementList --> arguementList, [','], expression.
+argumentList --> [].
+argumentList --> identifier.
+argumentList --> identifier, [','], argumentList.
 
 arrayCreateExpr --> ['new'], primitiveType, dimExprs, dims.
 arrayCreateExpr --> ['new'], classInterType, dimExprs, dims.
 
 dimExprs --> dimExpr.
-dimExprs --> dimExprs, dimExpr.
+dimExprs --> dimExpr, dimExprs.
 
 dimExpr --> ['['], expression, [']'].
 
 dims --> [].
 dims --> ['[]'].
-dims --> dims, ['[]'].
+dims --> ['[]'], dims.
 
 arrayAccess --> expression_name, ['['], expression, [']'].
-arrayAccess --> primaryNoNewArray, ['['], expression, [']'].
+%arrayAccess --> primaryNoNewArray, ['['], expression, [']'].
 
 %---------Tokens------------
 classpackageName --> typeName, identifier.
