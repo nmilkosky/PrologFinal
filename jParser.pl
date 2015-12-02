@@ -1,4 +1,6 @@
 %--------------------------Declarations-------------------------
+parse(X) :- once(classDeclaration(X, [])).
+
 classDeclaration --> classModifiers, [class], identifier, super, interfaces, classBody.
 identifier --> [I], {atom(I)}.
 
@@ -15,27 +17,29 @@ super --> [extends], classpackageName.
 interfaces --> [].
 interfaces --> [implements], classpackageName.
 
-classBody --> ['{'], classBodyDeclaration, ['}'].
+classBody --> ['{'], classBodyDeclarations, ['}'].
 
 classBodyDeclarations --> classBodyDeclaration.
-classBodyDeclarations --> classBodyDeclarations, classBodyDeclaration.
-classBodyDeclaration --> classMemberDeclaration, staticInitializer, constructorDeclaration.
-
-classMemberDeclaration --> [].
-classMemberDeclaration --> fieldDeclaration, methodDeclaration.
+classBodyDeclarations --> classBodyDeclaration, classBodyDeclarations.
+classBodyDeclaration --> classMemberDeclaration, constructorDeclaration.
+ 
+classMemberDeclaration --> fieldDeclaration.
+classMemberDeclaration --> methodDeclaration.
 
 staticInitializer --> [].
 staticInitializer --> [static].
 
 constructorDeclaration --> constructorModifier, constructorDeclarator, throws, constructorBody.
+constructorDeclaration --> [].
 
 constructorModifier --> [M], {constructor_modifier(M)}.
 constructor_modifier(public).
 constructor_modifier(protected).
 constructor_modifier(private).
 
-constructorDeclarator --> identifier, ['('], formalParameter, [')'].
+constructorDeclarator --> identifier, ['('], formalParameterList, [')'].
 
+formalParameterList --> [].
 formalParameterList --> formalParameter.
 formalParameterList --> formalParameter, formalParameterList.
 formalParameter --> type, identifier, [';'].
@@ -50,6 +54,9 @@ constructorInvocation --> [].
 constructorInvocation --> [this], ['('], arguementList, [')'], [';'].
 constructorInvocation --> [super], ['('], arguementList, [')'], [';'].
 
+fieldDeclaration --> [].
+fieldDeclaration --> fieldModifiers, type, varDeclarators.
+
 fieldModifiers --> fieldModifier.
 fieldModifiers --> fieldModifier, fieldModifiers.
 fieldModifier --> [M], {field_modifier(M)}.
@@ -61,9 +68,47 @@ field_modifier(final).
 field_modifier(transient).
 field_modifier(volatile).
 
-methodHeader --> []. %Needs completion
+varDeclarators --> varDeclatator.
+varDeclatators --> varDeclarators, varDeclatator.
+varDeclatator --> vardecId, [';'].
+varDeclatator --> vardecId, [=], varInit, [';'].
 
-methodBody --> ['{'], blockStatments, ['}'].
+vardecId --> identifier.
+vardecId --> identifier, [[]].
+
+methodDeclaration --> [].
+methodDeclaration --> methodHeader, methodBody.
+
+methodHeader --> methodModifiers, staticInitializer, resultType, methodDeclarator, throws.
+
+resultType --> type.
+resultType --> [void].
+
+methodModifiers --> [].
+methodModifiers --> methodModifier.
+methodModifiers --> methodModifier, methodModifiers.
+methodModifier --> [M], {method_modifier(M)}.
+
+method_modifier(public).
+method_modifier(protected).
+method_modifier(private).
+method_modifier(static).
+method_modifier(abstract).
+method_modifier(final).
+method_modifier(synchronized).
+method_modifier(native).
+
+methodDeclarator --> identifier, formalParameterList.
+
+methodBody --> ['{'], block, ['}'].
+
+varInit --> expression.
+varInit --> arrayInit.
+
+arrayInit --> ['{'], varInits, ['}'].
+
+varInits --> varInit.
+varInits --> varInit, varInits.
 
 %---------------------------Types-----------------------------
 type --> primitiveType.
@@ -97,6 +142,7 @@ block --> ['{'], block_statements, ['}'].
 blockStatements --> blockStatement.
 blockStatements --> blockStatements, blockStatement.
 
+blockStatement --> [].
 blockStatement --> localvardecStatement.
 blockStatement --> statement.
 
