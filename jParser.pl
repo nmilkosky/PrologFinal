@@ -1,6 +1,9 @@
 %--------------------------Declarations-------------------------
 parse(X) :- once(classDeclaration(X, [])).
 
+classDeclaration --> classModifiers, [class], identifier, classBody.
+classDeclaration --> classModifiers, [class], identifier, super, classBody.
+classDeclaration --> classModifiers, [class], identifier, interfaces, classBody.
 classDeclaration --> classModifiers, [class], identifier, super, interfaces, classBody.
 identifier --> [I], {atom(I)}.
 
@@ -11,50 +14,49 @@ class_modifier(public).
 class_modifier(abstract).
 class_modifier(final).
 
-super --> [].
-super --> [extends], classpackageName.
+super --> [extends], classType.
+	
+interfaces --> [implements], interfaceTypeList.
 
-interfaces --> [].
-interfaces --> [implements], classpackageName.
-
+classBody --> ['{'], ['}'].
 classBody --> ['{'], classBodyDeclarations, ['}'].
 
 classBodyDeclarations --> classBodyDeclaration.
 classBodyDeclarations --> classBodyDeclaration, classBodyDeclarations.
-classBodyDeclaration --> classMemberDeclaration, constructorDeclaration.
+classBodyDeclaration --> classMemberDeclaration.
  
 classMemberDeclaration --> fieldDeclaration.
+classMemberDeclaration --> constructorDeclaration.
 classMemberDeclaration --> methodDeclaration.
 
-staticInitializer --> [].
 staticInitializer --> [static].
 
+constructorDeclaration --> constructorModifier, constructorDeclarator, constructorBody.
 constructorDeclaration --> constructorModifier, constructorDeclarator, throws, constructorBody.
-constructorDeclaration --> [].
 
 constructorModifier --> [M], {constructor_modifier(M)}.
 constructor_modifier(public).
 constructor_modifier(protected).
 constructor_modifier(private).
 
+constructorDeclarator --> identifier, ['('], [')'].
 constructorDeclarator --> identifier, ['('], formalParameterList, [')'].
 
-formalParameterList --> [].
 formalParameterList --> formalParameter.
-formalParameterList --> formalParameter, formalParameterList.
-formalParameter --> type, identifier, [';'].
-formalParameter --> arrayType, identifier, [';'].
+formalParameterList --> formalParameter, [','], formalParameterList.
+formalParameter --> type, identifier.
+formalParameter --> arrayType, identifier.
 
-throws --> [].
-throws --> [throws], classpackageName.
+throws --> [throws], classTypeList.
 
+constructorBody --> ['{'], ['}'].
+constructorBody --> ['{'], constructorInvocation, ['}'].
+constructorBody --> ['{'], blockStatements, ['}'].
 constructorBody --> ['{'], constructorInvocation, blockStatements, ['}'].
 
-constructorInvocation --> [].
 constructorInvocation --> [this], ['('], argumentList, [')'], [';'].
 constructorInvocation --> [super], ['('], argumentList, [')'], [';'].
 
-fieldDeclaration --> [].
 fieldDeclaration --> fieldModifiers, type, varDeclarators.
 
 fieldModifiers --> fieldModifier.
@@ -76,15 +78,16 @@ varDeclatator --> vardecId, [=], varInit, [';'].
 vardecId --> identifier.
 vardecId --> identifier, [[]].
 
-methodDeclaration --> [].
 methodDeclaration --> methodHeader, methodBody.
 
+methodHeader --> methodModifiers, resultType, methodDeclarator.
+methodHeader --> methodModifiers, resultType, methodDeclarator, throws.
+methodHeader --> methodModifiers, staticInitializer, resultType, methodDeclarator.
 methodHeader --> methodModifiers, staticInitializer, resultType, methodDeclarator, throws.
 
 resultType --> type.
 resultType --> [void].
 
-methodModifiers --> [].
 methodModifiers --> methodModifier.
 methodModifiers --> methodModifier, methodModifiers.
 methodModifier --> [M], {method_modifier(M)}.
@@ -97,9 +100,12 @@ method_modifier(abstract).
 method_modifier(final).
 method_modifier(synchronized).
 method_modifier(native).
+method_modifier(main).
 
-methodDeclarator --> identifier, formalParameterList.
+methodDeclarator --> identifier, ['('], [')'].
+methodDeclarator --> identifier, ['('], formalParameterList, [')'].
 
+methodBody --> ['{'], ['}'].
 methodBody --> ['{'], block, ['}'].
 
 varInit --> expression.
@@ -142,7 +148,6 @@ block --> ['{'], block_statements, ['}'].
 blockStatements --> blockStatement.
 blockStatements --> blockStatements, blockStatement.
 
-blockStatement --> [].
 blockStatement --> localvardecStatement.
 blockStatement --> statement.
 
@@ -356,7 +361,15 @@ arrayAccess --> expression_name, ['['], expression, [']'].
 %arrayAccess --> primaryNoNewArray, ['['], expression, [']'].
 
 %---------Tokens------------
-classpackageName --> typeName, identifier.
+classpackageName --> typeName.
+
+classTypeList --> classType.
+classTypeList --> classType, classTypeList.
+classType --> typeName.
+
+interfaceTypeList --> interfaceType.
+interfaceTypeList --> interfaceType, interfaceTypeList.
+interfaceType --> typeName.
 
 typeName --> [I], {string(I)}.
 
