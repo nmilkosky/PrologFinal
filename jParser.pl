@@ -1,3 +1,43 @@
+% Java Syntax Parser in Prolog
+% CSC 435 Prolog Final Project
+% Programmed by: Thomas Borgia, Connor Davis, Angela Huang, Nate Milkosky
+%
+% Last modified on: December 9, 2015
+% Filename jParser.pl
+%
+% Compile in REPL using "swipl" then "[jParser]."
+% Execute, "parse_file("filename.ext")."
+
+%
+% File Processor:
+% Reads in a file called input.txt. Parses the input into atoms and stores them in a list
+% using a whitespace, tabs, and new lines as delimeters.
+% 
+% Usage: Generate a list for your Java source file with query: ?- parse_file.
+%
+
+parse_file(FileName) :-
+ 	%Opens a file or throws a file not found exception
+ 	catch(open(FileName, read, Input), _E2, (write('Could not find file.'),fail)), 
+    read_file(Input, Lines),
+    close(Input),
+    atomic_list_concat(Lines, ' ', Atom), %handles new lines
+    atom_string(Atom, String),
+    normalize_space(atom(Out), String), %handles whitespace for tab characters
+    atomic_list_concat(Split, ' ', Out), 
+    writeq(Split), %Atoms that need quotes are quoted. 
+    nl,
+    parse(Split).
+
+read_file(Stream,[]) :-
+    at_end_of_stream(Stream).
+
+read_file(Stream,[X|L]) :-
+    \+ at_end_of_stream(Stream),
+    read_line_to_codes(Stream, Codes),
+    atom_chars(X, Codes),
+    read_file(Stream,L), !.
+    
 %--------------------------Declarations-------------------------
 parse(X) :- once(classDeclaration(X, [])).
 
@@ -65,6 +105,7 @@ constructorInvocation --> [super], ['('], [')'], [';'].
 constructorInvocation --> [super], ['('], argumentList, [')'], [';'].
 
 fieldDeclaration --> fieldModifiers, type, varDeclarators, [';'].
+fieldDeclaration --> fieldModifiers, arrayType, varDeclarators, [';'].
 
 fieldModifiers --> fieldModifier.
 fieldModifiers --> fieldModifier, fieldModifiers.
@@ -93,6 +134,7 @@ methodHeader --> methodModifiers, staticInitializer, resultType, methodDeclarato
 methodHeader --> methodModifiers, staticInitializer, resultType, methodDeclarator, throws.
 
 resultType --> type.
+resultType --> arrayType.
 resultType --> [void].
 
 methodModifiers --> methodModifier.
@@ -143,10 +185,10 @@ floating_type(double).
 
 referenceType --> classpackageName.
 
-arrayType --> type, [[]].
-arrayType --> type, [[]], multiDimension.
-multiDimension --> [[]].
-multiDimension --> [[]], multiDimension.
+arrayType --> type, ['[]'].
+arrayType --> type, ['[]'], multiDimension.
+multiDimension --> ['[]'].
+multiDimension --> ['[]'], multiDimension.
 
 %--------------------------Blocks and Commands-------------------
 block --> ['{'], ['}'].
@@ -160,6 +202,7 @@ blockStatement --> statement.
 
 localvardecStatement --> localvardec, [';'].
 localvardec --> type, varDeclarators.
+localvardec --> arrayType, varDeclarators.
 
 statement --> simpleStatement.
 statement --> labeledStatement.
@@ -211,15 +254,8 @@ whileStatement --> [while], ['('], expression, [')'], statement.
 
 doStatement --> [do], statement, [while], expression, [';'].
 
-%Are expression and for_counter optional?
-forStatement --> [for], ['('], forInit, [';'], expression, [';'], forCounter, [')'], statement.
 forStatement --> [for], ['('], forInit, [';'], expression, [')'], statement.
-forStatement --> [for], ['('], forInit, [';'], forCounter, [')'], statement.
-forStatement --> [for], ['('], expression, [';'], forCounter, [')'], statement.
-forStatement --> [for], ['('], forInit, [')'], statement.
-forStatement --> [for], ['('], expression, [')'], statement.
-forStatement --> [for], ['('], forCounter, [')'], statement.
-forStatement --> [for], ['('], [')'], statement.
+forStatement --> [for], ['('], [';'], [';'], [')'], statement.
 
 forInit --> exprStatements.
 forInit --> localvardec.
@@ -261,6 +297,7 @@ leftSide --> fieldAccess.
 leftSide --> arrayAccess.
 
 initVar --> type, expression_name.
+initVar --> arrayType, expression_name.
 
 assignmentOper  --> [AOper], {assignment_operator(AOper)}.
 assignment_operator('=').

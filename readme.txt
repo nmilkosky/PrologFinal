@@ -1,34 +1,50 @@
-#Prolog Project
+#Java Syntax Parser in Prolog
+#CSC 435 Prolog Final Project
+#Programmed by: Thomas Borgia, Connor Davis, Angela Huang, Nate Milkosky 
+
+Java Syntax Basics
 https://docs.oracle.com/javase/specs/jls/se7/html/jls-18.html
 
-Demo queries
+Compilation and Execution
+----------------------------------------------------------------------
+While in the SWI-Prolog interpereter, type "[jParser]." to compile.
+Execute, "parse_file("filename.ext")."
 
-1 (Constructor): parse([public,class,test,'{',public,test,'(',')','{','}','}']).
+Installation Instructions
+----------------------------------------------------------------------
+For the purposes of this class, we recommend using the Prolog environment SWI-Prolog.
 
-2 (Method w/ Var Dec): parse([public,class,test,'{',public,int,method,'(',')','{',int,x,=,3,';','}','}']).
+---------- OSX ----------
 
-3 (Method w/ Params): parse([public,class,test,'{',public,int,method,'(',int,var1,',',string,var2,')','{','}','}']).
+If you have Homebrew installed, you can simply run the command:
 
-4 (Main Method): parse([public,class,test,'{',public,static,void,method,'(',string,[],args,')','{','}','}']).
+brew tap homebrew/x11
+brew install swi-prolog
+Otherwise, download and manually install from here:
+http://www.swi-prolog.org/download/stable (Links to an external site.)
 
-5 (Method w/ Return): parse([public,class,test,'{',public,int,method,'(',int,[],nums,')','{',return,x,';','}','}']).
+Start the interpreter using the command
 
-6 (Methods 2): parse([public,class,test,'{',public,test,'(',')','{',int,x,=,3,';',int,y,=,5,';',if,'(',y,==,5,')',y,=,0,';','}','}']).
+swipl
 
-7 (Two Methods): parse([public,class,test,'{',public,test,'(',')','{','}',public,static,void,main,'(',')','{','}','}']).
+--------- Linux ---------
 
-8 (Two variables): parse([public,class,test,'{',public,test,'(',')','{',int,x,=,3,';',int,y,=,0,';','}','}']).
+On Linux, it is recommended that you install SWI-Prolog using a package manager.
 
-9 (Complex Statement): parse([public,class,test,'{',public,static,void,main,'(',string,[],args,')','{',int,x,=,3,';',int,y,=,5,';',if,'(',y,==,5,')',y,=,0,';','}','}']).
+For example, in Ubuntu, run the command: 
 
-10 (1 missing id): parse([public,class,'{',public,test,'(',')','{','}','}']).
+sudo apt-get install swi-prolog
+If you do not have a package manager, you will have to compile it from the source code.
 
-11 (2 missing modifier): parse([public,class,test,'{',int,method,'(',')','{',int,x,=,3,';','}','}']).
+Start the interpreter by using:
 
-12 (3 missing comma): parse([public,class,test,'{',public,int,method,'(',int,var1,string,var2,')','{','}','}']).
+swipl
+ 
+---------- Windows ----------
 
-13 (5 without close bracket): parse([public,class,test,'{',public,int,method,'(',int,'[',nums,')','{',return,x,';','}','}']).
+On Windows, you have to run the installer found here:
+http://www.swi-prolog.org/download/stable (Links to an external site.)
 
-14 (7 missing bracket): parse([public,class,test,'{',public,test,'(',')','{',int,x,=,3,';',int,y,=,0,';','}']).
+Once it is installed, the environment can be started from the start menu or where it was installed into.
 
-15 (11 missing semicolon): parse([public,class,test,'{',public,static,void,main,'(',string,[],args,')','{',int,x,=,3,';',int,y,=,5,';',if,'(',y,==,5,')',y,=,0,'}','}']).
+Running a Prolog file is as easy as opening a .pl file.
