@@ -1,4 +1,4 @@
-/** 
+/**
 * File Processor:
 * Reads in a file called input.txt. Parses the input into atoms and stores them in a list
 * using a whitespace, tabs, and new lines as delimeters.
@@ -7,16 +7,16 @@
 *
 */
 
-parse_file :-
+parse_file(FileName) :-
  	%Opens a file or throws a file not found exception
- 	catch(open('input.txt', read, Input), E, (write('Could not find file.'),fail)), 
+ 	catch(open(FileName, read, Input), _E2, (write('Could not find file.'),fail)), 
     read_file(Input, Lines),
     close(Input),
     atomic_list_concat(Lines, ' ', Atom), %handles new lines
     atom_string(Atom, String),
     normalize_space(atom(Out), String), %handles whitespace for tab characters
     atomic_list_concat(Split, ' ', Out), 
-    PasstoParse = writeq(Split), %Atoms that need quotes are quoted. 
+    writeq(Split), %Atoms that need quotes are quoted. 
     nl,
     parse(Split).
 
