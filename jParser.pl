@@ -161,7 +161,7 @@ varInit --> arrayInit.
 arrayInit --> ['{'], varInits, ['}'].
 
 varInits --> varInit.
-varInits --> varInits, varInit.
+varInits --> varInit, varInits.
 
 %---------------------------Types-----------------------------
 type --> primitiveType.
