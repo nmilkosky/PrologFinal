@@ -118,10 +118,10 @@ field_modifier(final).
 field_modifier(transient).
 field_modifier(volatile).
 
-varDeclarators --> varDeclatator.
-varDeclatators --> varDeclarator, varDeclatators.
-varDeclatator --> vardecId.
-varDeclatator --> vardecId, ['='], varInit.
+varDeclarators --> varDeclarator.
+varDeclarators --> varDeclarator, varDeclarators.
+varDeclarator --> vardecId.
+varDeclarator --> vardecId, ['='], varInit.
 
 vardecId --> identifier.
 vardecId --> identifier, [[]].
