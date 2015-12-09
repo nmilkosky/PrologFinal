@@ -8,17 +8,14 @@
 % Compile in REPL using "swipl" then "[jParser]."
 % Execute, "parse_file("filename.ext")."
 
-%
-% File Processor:
-% Reads in a file called input.txt. Parses the input into atoms and stores them in a list
-% using a whitespace, tabs, and new lines as delimeters.
-% 
-% Usage: Generate a list for your Java source file with query: ?- parse_file.
-%
 
+% File Processor:
+% Parses the file input into atoms and stores them in a list
+% using whitespaces, tabs, and new lines as delimeters.
+%
 parse_file(FileName) :-
- 	%Opens a file or throws a file not found exception
- 	catch(open(FileName, read, Input), _E2, (write('Could not find file.'),fail)), 
+    %Opens a file or throws a file not found exception
+    catch(open(FileName, read, Input), _E2, (write('Could not find file.'),fail)), 
     read_file(Input, Lines),
     close(Input),
     atomic_list_concat(Lines, ' ', Atom), %handles new lines
@@ -29,6 +26,7 @@ parse_file(FileName) :-
     nl,
     parse(Split).
 
+%Reads in a file and concatenates input line by line
 read_file(Stream,[]) :-
     at_end_of_stream(Stream).
 
@@ -37,10 +35,15 @@ read_file(Stream,[X|L]) :-
     read_line_to_codes(Stream, Codes),
     atom_chars(X, Codes),
     read_file(Stream,L), !.
-    
-%--------------------------Declarations-------------------------
+
+
+%Parser:
+%Takes in an input list X and recursively checks whether its elements fit Java syntax rules.
+%Second argument for classDeclaration is an empty list to ensure the entire list is checked.
+%
 parse(X) :- once(classDeclaration(X, [])).
 
+%--------------------------Declarations-------------------------
 classDeclaration --> classModifiers, [class], identifier, classBody.
 classDeclaration --> classModifiers, [class], identifier, super, classBody.
 classDeclaration --> classModifiers, [class], identifier, interfaces, classBody.
@@ -231,7 +234,6 @@ labeledStatement --> identifier, [':'], statement.
 expressionStatement --> exprStatement,[';'].
 
 exprStatement --> expression.
-%Allow optional brackets (add new rules?)
 
 ifStatement --> [if], ['('], expression, [')'], statement.
 if_elseStatement --> [if], ['('], expression, [')'], statement, [else], statement.
@@ -452,7 +454,6 @@ string_literal --> [S], {string(S)}.
 
 null_literal --> [null].
 
-% Not sure if this is important
 keyword --> [abstract].
 keyword --> [char].
 keyword --> [double].
